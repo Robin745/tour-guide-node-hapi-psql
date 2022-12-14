@@ -1,0 +1,22 @@
+{
+	"name": "node-test",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@hapi/hapi": "^21.1.0",
+		"blipp": "^4.0.2",
+		"hapi-auto-route": "^3.0.4",
+		"joi": "^17.7.0",
+		"jsonfile": "^6.1.0",
+		"nodemon": "^2.0.20",
+		"pg": "^8.5.1",
+		"underscore": "^1.13.6",
+		"uuid": "^9.0.0"
+	}
+}
