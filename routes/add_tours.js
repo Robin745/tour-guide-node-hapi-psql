@@ -7,7 +7,7 @@ const uuid = require("uuid");
 const payload_scheme = Joi.object({
 	// productId: Joi.number().allow(null, "").optional(),
 	title: Joi.string().allow(null, "").optional(),
-	image: Joi.string().allow(null, "").optional(),
+	img: Joi.string().allow(null, "").optional(),
 	price: Joi.number().allow(null, "").optional(),
 	description: Joi.string().allow(null, "").optional(),
 	// email: Joi.string().allow(null, "").optional(),
@@ -63,7 +63,7 @@ const route_controller = {
 const set_data = async (request) => {
 	let oid = uuid.v4();
 	let query = `INSERT INTO public.tours (oid,title,img,price,description)
-    VALUES ('${oid}', '${request.payload.title}','${request.payload.image}', ${request.payload.price},'${request.payload.description}')`;
+    VALUES ('${oid}', '${request.payload.title}','${request.payload.img}', ${request.payload.price},'${request.payload.description}')`;
 
 	let sql = {
 		text: query,

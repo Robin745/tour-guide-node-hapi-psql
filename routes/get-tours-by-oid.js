@@ -32,7 +32,8 @@ const route_controller = {
 	},
 	handler: async (request, h) => {
 		let s = await get_tours_data_by_oid(request);
-		if (s != null) {
+		console.log(s);
+		if (s) {
 			return h.response(s);
 		} else {
 			return h.response({ code: 201, message: "Data not found" });
@@ -43,7 +44,7 @@ const route_controller = {
 const get_tours_data_by_oid = async (request) => {
 	// console.log(request.payload.oid);
 	let data = [];
-	let query = `select * from public.tours t where t.oid = ${request.payload.oid}`;
+	let query = `select * from public.tours t where t.oid ='${request.payload.oid}'`;
 
 	let sql = {
 		text: query,

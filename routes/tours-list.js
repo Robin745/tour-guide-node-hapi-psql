@@ -8,7 +8,7 @@ const route_controller = {
 	path: "/tours",
 	handler: async (request, h) => {
 		let s = await get_tours_data(request);
-		return h.response({ "tours-data": s });
+		return h.response({ toursData: s });
 	},
 };
 
