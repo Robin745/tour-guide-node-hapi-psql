@@ -15,9 +15,9 @@ const payload_scheme = Joi.object({
 
 const route_controller = {
 	method: "POST",
-	path: "/tours/get-by-oid",
+	path: "/tours/remove",
 	options: {
-		description: "Get tours by oid",
+		description: "Delete tours by oid",
 		validate: {
 			payload: payload_scheme,
 			options: {
@@ -43,7 +43,7 @@ const route_controller = {
 const get_tours_data_by_oid = async (request) => {
 	// console.log(request.payload.oid);
 	let data = [];
-	let query = `select * from public.tours t where t.oid ='${request.payload.oid}'`;
+	let query = `delete from public.tours t where t.oid ='${request.payload.oid}'`;
 
 	let sql = {
 		text: query,
