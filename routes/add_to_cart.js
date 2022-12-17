@@ -2,15 +2,14 @@
 
 const Joi = require("joi");
 const Dao = require("../util/dao");
-const uuid = require("uuid");
 
 const payload_scheme = Joi.object({
-	added_time: Joi.string().allow(null, "").optional(),
-	description: Joi.string().allow(null, "").optional(),
-	img: Joi.string().allow(null, "").optional(),
-	id: Joi.string().allow(null, "").optional(),
-	price: Joi.number().allow(null, "").optional(),
+	oid: Joi.string().allow(null, "").optional(),
 	title: Joi.string().allow(null, "").optional(),
+	img: Joi.string().allow(null, "").optional(),
+	price: Joi.number().allow(null, "").optional(),
+	added_at: Joi.string().allow(null, "").optional(),
+	description: Joi.string().allow(null, "").optional(),
 	// email: Joi.string().allow(null, "").optional(),
 	// phone: Joi.string().allow(null, "").optional(),
 	// quantity: Joi.number().allow(null, "").optional(),
@@ -20,9 +19,9 @@ const payload_scheme = Joi.object({
 
 const route_controller = {
 	method: "POST",
-	path: "/tours/update-tour",
+	path: "/tours/add-to-cart",
 	options: {
-		description: "Update Tour data",
+		description: "Add To Cart",
 		validate: {
 			payload: payload_scheme,
 			options: {
@@ -36,7 +35,15 @@ const route_controller = {
 		},
 	},
 	handler: async (request, h) => {
-		const data = await update_data(request);
+		const checkTitle = await hasTitle(request);
+		if (checkTitle > 0) {
+			return h.response({
+				status: false,
+				code: 202,
+				message: "Already In Cart",
+			});
+		}
+		const data = await set_data(request);
 		if (!data) {
 			return h.response({
 				status: false,
@@ -48,20 +55,14 @@ const route_controller = {
 		return h.response({
 			status: true,
 			code: 200,
-			message: "Data has been updated successfully",
+			message: "Added To cart",
 		});
 	},
 };
 
-const update_data = async (request) => {
-	let query = `UPDATE tours
-    SET title = '${request.payload.title}', img = '${request.payload.img}', description = '${request.payload.description}', price = ${request.payload.price}
-    WHERE oid = '${request.payload.id}' `;
-
-	// let query = `UPDATE tours SET (oid,title,price,description,created_at,img)
-	// VALUES ('${request.payload.id}', '${request.payload.title}', ${request.payload.price},'${request.payload.description}','${request.payload.added_time}','${request.payload.img}')
-	// WHERE tours.oid = '${request.payload.oid}'
-	// `;
+const set_data = async (request) => {
+	let query = `INSERT INTO public.cart (oid,title,img,price,description)
+    VALUES ('${request.payload.oid}', '${request.payload.title}','${request.payload.img}', ${request.payload.price},'${request.payload.description}')`;
 
 	let sql = {
 		text: query,
@@ -76,6 +77,25 @@ const update_data = async (request) => {
 		);
 		return false;
 	}
+};
+
+const hasTitle = async (request) => {
+	let data = null;
+	let query = `Select * from public.cart t where t.title = $1`;
+
+	let sql = {
+		text: query,
+		values: [request.payload.title],
+	};
+	try {
+		data = await Dao.get_data(request.pg, sql);
+		return data.length;
+	} catch (e) {
+		console.log(
+			`An exception occurred while getting issue list : ${e?.message}`
+		);
+	}
+	return 0;
 };
 
 module.exports = route_controller;
