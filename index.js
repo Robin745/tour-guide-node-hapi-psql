@@ -19,7 +19,7 @@ const init = async () => {
 	const pool = await init_db();
 	const server = Hapi.server({
 		port: process.env.PORT || 4000,
-		host: process.env.HOST || "localhost",
+		// host: process.env.HOST || "localhost",
 		routes: {
 			cors: {
 				origin: ["*"],
